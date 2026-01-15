@@ -1,4 +1,5 @@
 import userAgent from '../runtime/userAgent.js';
+import globalThis from '../runtime/globalThis.js';
 
 export default {
     name:'iOS',
@@ -11,8 +12,8 @@ export default {
     async is(){
         let isMatch = this.parse().is;
         if(!isMatch){
-            if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-                const uaData = await navigator.userAgentData.getHighEntropyValues([
+            if(globalThis?.navigator?.userAgentData){
+                const uaData = await globalThis.navigator.userAgentData.getHighEntropyValues([
                     "platform"
                 ]);
                 return uaData.platform === "iOS";
@@ -22,8 +23,8 @@ export default {
     },
     async version() {
         let version = this.parse().version;
-        if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-            const uaData = await navigator.userAgentData.getHighEntropyValues([
+        if(globalThis?.navigator?.userAgentData){
+            const uaData = await globalThis.navigator.userAgentData.getHighEntropyValues([
                 "platformVersion"
             ]);
             return uaData.platformVersion;

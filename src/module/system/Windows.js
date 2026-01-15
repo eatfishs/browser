@@ -26,23 +26,18 @@ export default {
     },
     async version(){
         let version = this.parse().version;
-        return new Promise(function(resolve){
-            if(globalThis?.navigator?.userAgentData){
-                globalThis.navigator.userAgentData.getHighEntropyValues(["platformVersion"]).then(function(ua){
-                    let windowsVersion = '';
-                    if (globalThis.navigator.userAgentData.platform === "Windows") {
-                        const majorPlatformVersion = parseInt(ua.platformVersion.split('.')[0]);
-                        if(majorPlatformVersion>=13){
-                            windowsVersion = '11';
-                        }else{
-                            windowsVersion = '10';
-                        }
-                    }
-                    resolve(windowsVersion);
-                });
-            }else{
-                resolve(version);
+        if(globalThis?.navigator?.userAgentData){
+            const uaData = await globalThis.navigator.userAgentData.getHighEntropyValues(["platformVersion"]);
+            if (uaData.platform === "Windows") {
+                const majorPlatformVersion = parseInt(uaData.platformVersion.split('.')[0]);
+                if(majorPlatformVersion>=13){
+                    windowsVersion = '11';
+                }else{
+                    windowsVersion = '10';
+                }
+                return windowsVersion;
             }
-        });
+        }
+        return version;
     }
 }
